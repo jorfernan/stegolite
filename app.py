@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import binascii
 from PIL import Image
 import os
 from colors import bcolors
