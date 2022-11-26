@@ -3,7 +3,17 @@ import binascii
 from PIL import Image
 import os
 from colors import bcolors
+from random import randint
 
+TITLE = """\n
+                __ _                   
+  /\/\  _   _  / _\ |_ ___  __ _  ___  
+ /    \| | | | \ \| __/ _ \/ _` |/ _ \ 
+/ /\/\ \ |_| | _\ \ ||  __/ (_| | (_) |
+\/    \/\__, | \__/\__\___|\__, |\___/ 
+        |___/              |___/       
+\nBy Jorge Fernández Moreno\n
+"""
 
 # Transforms a string of characters into a string of its char binary values
 def txt_to_bin_str(txt):
@@ -60,6 +70,7 @@ def hide_on_red(image,text):
             img_data[cont] = tuple(l)
             cont += 1
     
+    # Currently saving images without alpha
     new_image = Image.new("RGB",(width,height))
     new_image.putdata(img_data)
 
@@ -67,10 +78,12 @@ def hide_on_red(image,text):
 
 def saveImage(image):
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    image.save(os.path.join(dir_path,"newImages","newImage.jpg"))
+    img_name = "encoded" + str(randint(1,200)) + str(randint(1,100)) + ".jpg"
+    image.save(os.path.join(dir_path,"newImages",img_name))
 
 def main():
     try:
+        print(f"{bcolors.OKBLUE + bcolors.BOLD}{TITLE}{bcolors.ENDC}")
         img = getImage()
         txt = getText()
         new_img = hide_on_red(img,txt)
