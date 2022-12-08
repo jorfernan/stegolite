@@ -2,7 +2,7 @@
 from PIL import Image
 import os
 from colors import bcolors
-from random import randint
+import datetime
 
 TITLE = """\n
                 __ _                   
@@ -13,6 +13,9 @@ TITLE = """\n
         |___/              |___/       
 \nBy Jorge Fernández Moreno\n
 """
+
+FLAG = "1111000011001000001111001101"
+
 
 # Transforms a string of characters into a string of its char binary values
 def txt_to_bin_str(txt):
@@ -55,17 +58,24 @@ def getText():
 
 #Hides data inside the R value
 def hide_on_red(image,text):
+
     data = txt_to_bin_str(text)
     width,height = image.size
     img_data = list(image.getdata())
-    if len(data) > len(img_data):
+
+    if (len(data) + len(FLAG)) > len(img_data):
         print(f"{bcolors.FAIL + bcolors.BOLD}\nError! Data too large.\nCancelling execution...\n{bcolors.ENDC}")
         exit()
     else:
         cont = 0
         for element in data:
             l = list(img_data[cont])
-            l[0] = bin_to_int(int_to_8_bits_bin(l[0])[:-1]+element)
+            l[0] = bin_to_int(int_to_8_bits_bin(l[0])[:-1]+ element )
+            img_data[cont] = tuple(l)
+            cont += 1
+        for char in FLAG:
+            l = list(img_data[cont])
+            l[0] = bin_to_int(int_to_8_bits_bin(l[0])[:-1] + char)
             img_data[cont] = tuple(l)
             cont += 1
     
@@ -75,16 +85,20 @@ def hide_on_red(image,text):
 
     return new_image
 
-def saveImage(image):
+
+def saveImage(image, ext = ".jpg"):
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    img_name = "encoded" + str(randint(1,200)) + str(randint(1,100)) + ".jpg"
+    now = str(datetime.datetime.now().timestamp()).replace(".","")
+    img_name =  now + ext
     image.save(os.path.join(dir_path,"newImages",img_name))
 
 def main():
     try:
         print(f"{bcolors.OKBLUE + bcolors.BOLD}{TITLE}{bcolors.ENDC}")
+
         img = getImage()
         txt = getText()
+
         new_img = hide_on_red(img,txt)
         saveImage(new_img)
         
