@@ -11,7 +11,7 @@ TITLE = """\n
 / /\/\ \ |_| | _\ \ ||  __/ (_| | (_) |
 \/    \/\__, | \__/\__\___|\__, |\___/ 
         |___/              |___/       
-\nBy Jorge Fernández Moreno\n
+\nBy Jorge Fernández Moreno
 """
 
 FLAG = "1111000011001000001111001101"
@@ -92,15 +92,35 @@ def saveImage(image, ext = ".jpg"):
     img_name =  now + ext
     image.save(os.path.join(dir_path,"newImages",img_name))
 
+def encode():
+    img = getImage()
+    txt = getText()
+    new_img = hide_on_red(img,txt)
+    saveImage(new_img)
+
+def decode():
+    print("DECODING...")
+
 def main():
     try:
         print(f"{bcolors.OKBLUE + bcolors.BOLD}{TITLE}{bcolors.ENDC}")
+        print("")
+        print(f"{bcolors.OKCYAN + bcolors.BOLD}Features available:{bcolors.ENDC}")
+        print("")
+        print(f"{bcolors.BOLD}- Encode input text on {bcolors.FAIL}RED{bcolors.ENDC}{bcolors.BOLD} pixel from image {bcolors.WARNING}[1]{bcolors.ENDC}")
+        print("")
+        
+        action = input(f"{bcolors.BOLD}{bcolors.WARNING}OPTION: {bcolors.ENDC}")
+        
+        actions = {
+            "1" : encode,
+            "5" : decode
+        }
 
-        img = getImage()
-        txt = getText()
-
-        new_img = hide_on_red(img,txt)
-        saveImage(new_img)
+        try:
+            actions.get(action)()
+        except KeyError:
+            print(bcolors.FAIL+bcolors.BOLD+ "\n\nAction not found... Cancelling execution... Bye!" + bcolors.ENDC)
         
 
     except KeyboardInterrupt:
